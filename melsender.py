@@ -6,10 +6,10 @@ import pprint
 from influxdb import InfluxDBClient
 import datetime
 
-import mel_config as conf
+import my_config as conf
 
 # This application pulls data from MELcloud and sends to InfluxDB database
-# Configure credentials and InfluxDB host information in mel_config.py
+# Configure credentials and InfluxDB host information in my_config.py
 
 if __name__ == '__main__':
     parser = OptionParser('usage: %prog [options]')

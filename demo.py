@@ -28,4 +28,4 @@ if __name__ == '__main__':
     pp = pprint.PrettyPrinter()
     pp.pprint(output)
 
-    print "RoomTemperature is " + str(output['RoomTemperature'])
+    print("RoomTemperature is " + str(output['RoomTemperature']))
