@@ -21,7 +21,7 @@ if __name__ == '__main__':
     mc = mcloud(debug=options.debug)
     mc.login(conf.MELCLOUD_USER, conf.MELCLOUD_PWD)
 
-    paramNames = ['FanSpeed','RoomTemperature','SetTemperature']
+    paramNames = ['FanSpeed','RoomTemperature','SetTemperature','ActualFanSpeed','CurrentEnergyConsumed']
     output = mc.getDeviceParams(paramNames)
 
     timestamp = datetime.datetime.utcnow()
@@ -34,7 +34,9 @@ if __name__ == '__main__':
             "fields": {
                "RoomTemperature": output['RoomTemperature'],
                "SetTemperature": output['SetTemperature'],
-               "FanSpeed": output['FanSpeed']
+               "FanSpeed": output['FanSpeed'],
+               "ActualFanSpeed": output['ActualFanSpeed'],
+               "CurrentEnergyConsumed": output['CurrentEnergyConsumed']
             }
         }
     ]
