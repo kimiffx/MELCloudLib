@@ -22,10 +22,11 @@ if __name__ == '__main__':
     mc.login(options.username, options.password)
 
     paramNames = ['FanSpeed','RoomTemperature','SetTemperature']
-    output = mc.getDeviceParams(paramNames)
+    output = mc.getAllDevices(paramNames)
 
     # Debug printout
+    print("Test client output:\n")
     pp = pprint.PrettyPrinter()
     pp.pprint(output)
 
-    print("RoomTemperature is " + str(output['RoomTemperature']))
+    #print("RoomTemperature is " + str(output['RoomTemperature']))

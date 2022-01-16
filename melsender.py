@@ -18,29 +18,34 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
 
+    client = InfluxDBClient(conf.INFLUXDB_HOST, conf.INFLUXDB_PORT, conf.INFLUXDB_USER, conf.INFLUXDB_PWD, conf.INFLUXDB_DATABASE, timeout=5)
+
     mc = mcloud(debug=options.debug)
     mc.login(conf.MELCLOUD_USER, conf.MELCLOUD_PWD)
 
+    # In addition to the listed parameters, melcloudlib always returns DeviceName
     paramNames = ['FanSpeed','RoomTemperature','SetTemperature','ActualFanSpeed','CurrentEnergyConsumed']
-    output = mc.getDeviceParams(paramNames)
+    allDevices = mc.getAllDevices(paramNames)
 
     timestamp = datetime.datetime.utcnow()
     str_timestamp = timestamp.isoformat("T") + "Z"
 
-    json_temp = [
-        {
-            "measurement": "mcloud",
-            "time": str_timestamp,
-            "fields": {
-               "RoomTemperature": output['RoomTemperature'],
-               "SetTemperature": output['SetTemperature'],
-               "FanSpeed": output['FanSpeed'],
-               "ActualFanSpeed": output['ActualFanSpeed'],
-               "CurrentEnergyConsumed": output['CurrentEnergyConsumed']
+    for device in allDevices:
+        json_temp = [
+            {
+                "measurement": "mcloud",
+                "tags": {
+                    "DeviceName": device['DeviceName']
+                },
+                "time": str_timestamp,
+                "fields": {
+                    "RoomTemperature":       device['RoomTemperature'],
+                    "SetTemperature":        device['SetTemperature'],
+                    "FanSpeed":              device['FanSpeed'],
+                    "ActualFanSpeed":        device['ActualFanSpeed'],
+                    "CurrentEnergyConsumed": device['CurrentEnergyConsumed']
+                }
             }
-        }
-    ]
+        ]
 
-    client = InfluxDBClient(conf.INFLUXDB_HOST, conf.INFLUXDB_PORT, conf.INFLUXDB_USER, conf.INFLUXDB_PWD, conf.INFLUXDB_DATABASE, timeout=5)
-
-    client.write_points(json_temp)
+        client.write_points(json_temp)

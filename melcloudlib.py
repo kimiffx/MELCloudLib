@@ -26,16 +26,47 @@ class mcloud():
                 "Language": 0,  # 0=English
                 "Persist": "true"
             }
-	)
+        )
 
         if self.debugMode:
-            parsed = json.loads(response.text)
-            print(json.dumps(parsed, indent=2, sort_keys=True))
+            print("Login response:\n")
+            print(response.text + "\n")
 
         sessionKey = response.json()['LoginData']['ContextKey']
 
         self.session.headers['X-MitsContextKey'] = sessionKey
 
+# MELCloud API outputs:
+# In the top level there is a list of buildings
+# Under each building there is Structure.Devices list
+# Actual device parameters are in key 'Device' under Devices list item
+
+# Get all devices of this account
+    def getAllDevices(self, paramlist):
+        response = self.session.get(self.URL_LIST_DEVICES)
+
+        if self.debugMode:
+            print("Device query response:\n")
+            print(response.text + "\n")
+
+        data = response.json()
+        outDevices = []
+
+        for building in data:
+            for device in building['Structure']['Devices']:
+                devicedata={}
+                # Always return DeviceName
+                devicedata['DeviceName'] = device['DeviceName']
+
+                for param in paramlist:
+                    devicedata[param] = device['Device'][param]
+
+                outDevices.append(devicedata)
+
+        return outDevices
+
+
+# Get data of a single device identified by the index in array returned by MELCloud API.
 # paramlist shall be list of strings referring to parameter names
     def getDeviceParams(self, paramlist, devindex=0):
         response = self.session.get(self.URL_LIST_DEVICES)
