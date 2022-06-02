@@ -24,7 +24,7 @@ if __name__ == '__main__':
     mc.login(conf.MELCLOUD_USER, conf.MELCLOUD_PWD)
 
     # In addition to the listed parameters, melcloudlib always returns DeviceName
-    paramNames = ['FanSpeed','RoomTemperature','SetTemperature','ActualFanSpeed','CurrentEnergyConsumed']
+    paramNames = ['FanSpeed','RoomTemperature','SetTemperature','ActualFanSpeed','CurrentEnergyConsumed','OperationMode']
     allDevices = mc.getAllDevices(paramNames)
 
     timestamp = datetime.datetime.utcnow()
@@ -43,7 +43,8 @@ if __name__ == '__main__':
                     "SetTemperature":        device['SetTemperature'],
                     "FanSpeed":              device['FanSpeed'],
                     "ActualFanSpeed":        device['ActualFanSpeed'],
-                    "CurrentEnergyConsumed": device['CurrentEnergyConsumed']
+                    "CurrentEnergyConsumed": device['CurrentEnergyConsumed'],
+                    "OperationMode":         device['OperationMode']
                 }
             }
         ]
